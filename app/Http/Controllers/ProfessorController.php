@@ -7,79 +7,55 @@ use Illuminate\Http\Request;
 
 class ProfessorController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        //
+        $professores = Professor::get();
+        return view('professor.index',['professores' => $professores]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        //
+        return view('professor.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        $professor=Professor::create($request->all());
+        return redirect()->route('professor.index');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Professor  $professor
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Professor $professor)
+    public function show($id)
     {
-        //
+        $professor = Professor::find($id);
+        if(!$professor){
+            return redirect()->route('professor.index');
+        }
+        return view('professor.show',compact('professor'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Professor  $professor
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Professor $professor)
+    public function edit($id)
     {
-        //
+        $professor = Professor::find($id);
+        if(!$professor){
+            return redirect()->route('professor.index');
+        }
+        return view('professor.edit',compact('professor'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Professor  $professor
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Professor $professor)
+    public function update(Request $request, $id)
     {
-        //
+        $professor = Professor::find($id);
+        if(!$professor){
+            return redirect()->back();
+        }
+        $professor->update($request->all());
+        return redirect()->route('professor.index')->with('messsage','Alterado com sucesso');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Professor  $professor
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Professor $professor)
+    public function destroy($id)
     {
-        //
+        $professor = Professor::find($id);
+        $professor->delete();
+        return redirect()->route('professor.index');
     }
 }

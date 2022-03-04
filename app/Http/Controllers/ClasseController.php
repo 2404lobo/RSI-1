@@ -7,79 +7,55 @@ use Illuminate\Http\Request;
 
 class ClasseController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        //
+        $classes = Classe::get();
+        return view('classe.index',['classes' => $classes]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        //
+        return view('classe.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        $classe=Classe::create($request->all());
+        return redirect()->route('classe.index');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Classe  $classe
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Classe $classe)
+    public function show($id)
     {
-        //
+        $classe = Classe::find($id);
+        if(!$classe){
+            return redirect()->route('classe.index');
+        }
+        return view('classe.show',compact('classe'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Classe  $classe
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Classe $classe)
+    public function edit($id)
     {
-        //
+        $classe = Classe::find($id);
+        if(!$classe){
+            return redirect()->route('classe.index');
+        }
+        return view('classe.edit',compact('classe'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Classe  $classe
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Classe $classe)
+    public function update(Request $request, $id)
     {
-        //
+        $classe = Classe::find($id);
+        if(!$classe){
+            return redirect()->back();
+        }
+        $classe->update($request->all());
+        return redirect()->route('classe.index')->with('messsage','Alterado com sucesso');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Classe  $classe
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Classe $classe)
+    public function destroy($id)
     {
-        //
+        $classe = Classe::find($id);
+        $classe->delete();
+        return redirect()->route('classe.index');
     }
 }

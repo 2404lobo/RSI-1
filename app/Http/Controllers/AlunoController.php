@@ -7,79 +7,55 @@ use Illuminate\Http\Request;
 
 class AlunoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        //
+        $alunos = Aluno::get();
+        return view('aluno.index',['alunos' => $alunos]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        //
+        return view('aluno.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        $aluno=Aluno::create($request->all());
+        return redirect()->route('aluno.index');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Aluno  $aluno
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Aluno $aluno)
+    public function show($id)
     {
-        //
+        $aluno = Aluno::find($id);
+        if(!$aluno){
+            return redirect()->route('aluno.index');
+        }
+        return view('aluno.show',compact('aluno'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Aluno  $aluno
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Aluno $aluno)
+    public function edit($id)
     {
-        //
+        $aluno = Aluno::find($id);
+        if(!$aluno){
+            return redirect()->route('aluno.index');
+        }
+        return view('aluno.edit',compact('aluno'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Aluno  $aluno
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Aluno $aluno)
+    public function update(Request $request, $id)
     {
-        //
+        $aluno = Aluno::find($id);
+        if(!$aluno){
+            return redirect()->back();
+        }
+        $aluno->update($request->all());
+        return redirect()->route('aluno.index')->with('messsage','Alterado com sucesso');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Aluno  $aluno
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Aluno $aluno)
+    public function destroy($id)
     {
-        //
+        $aluno = Aluno::find($id);
+        $aluno->delete();
+        return redirect()->route('aluno.index');
     }
 }
